@@ -44,6 +44,13 @@ async def put(id: int, payload: CharacterUpdatePayloadSchema) -> Union[dict, Non
         description=payload.description,
     )
     if character:
-        update_character = await Character.filter(id=id).first().values()
+        update_character = await Character.filter(id=id).values(
+            "id",
+            "name",
+            "age",
+            "race",
+            "description",
+
+        ).first()
         return update_character
     return None
