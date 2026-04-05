@@ -23,10 +23,9 @@ async def get(id: int) -> Union[dict, None]:
         "age",
         "race",
         "description",
-    ).first()
-    if character:
-        return character
-    return None
+        "created_at",
+    )
+    return character[0] if character else None
 
 
 async def get_all() -> List[dict]:
@@ -36,6 +35,7 @@ async def get_all() -> List[dict]:
         "age",
         "race",
         "description",
+        "created_at",
     )
     return characters
 
@@ -62,7 +62,7 @@ async def put(id: int, payload: CharacterUpdatePayloadSchema) -> Union[dict, Non
             "age",
             "race",
             "description",
-
-        ).first()
-        return update_character
+            "created_at",
+        )
+        return update_character[0] if update_character else None
     return None
