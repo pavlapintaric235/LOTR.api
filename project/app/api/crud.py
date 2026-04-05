@@ -1,6 +1,7 @@
 from typing import List, Union
 
-from app.models.pydantic import CharacterPayloadSchema, CharacterUpdatePayloadSchema
+from app.models.pydantic import (CharacterPayloadSchema,
+                                 CharacterUpdatePayloadSchema)
 from app.models.tortoise import Character
 
 
