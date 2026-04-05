@@ -6,7 +6,7 @@ from app.models.tortoise import Character
 
 
 async def post(payload: CharacterPayloadSchema) -> int:
-    character = await Character(
+    character = Character(
         name=payload.name,
         age=payload.age,
         race=payload.race,
@@ -17,14 +17,26 @@ async def post(payload: CharacterPayloadSchema) -> int:
 
 
 async def get(id: int) -> Union[dict, None]:
-    character = await Character.filter(id=id).first().values()
+    character = await Character.filter(id=id).values(
+        "id",
+        "name",
+        "age",
+        "race",
+        "description",
+    ).first()
     if character:
         return character
     return None
 
 
 async def get_all() -> List[dict]:
-    characters = await Character.all().values()
+    characters = await Character.all().values(
+        "id",
+        "name",
+        "age",
+        "race",
+        "description",
+    )
     return characters
 
 
