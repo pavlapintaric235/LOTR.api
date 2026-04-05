@@ -1,7 +1,6 @@
 from typing import List, Union
 
-from app.models.pydantic import (CharacterPayloadSchema,
-                                 CharacterUpdatePayloadSchema)
+from app.models.pydantic import CharacterPayloadSchema, CharacterUpdatePayloadSchema
 from app.models.tortoise import Character
 
 
@@ -44,9 +43,10 @@ async def delete(id: int) -> int:
     character = await Character.filter(id=id).first()
 
     if character:
-         return await character.delete()
+        return await character.delete()
 
     return 0
+
 
 async def put(id: int, payload: CharacterUpdatePayloadSchema) -> Union[dict, None]:
     character = await Character.filter(id=id).update(
