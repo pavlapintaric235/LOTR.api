@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-permissionss:
+permissions:
   contents: read
   packages: write
 
