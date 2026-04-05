@@ -1,6 +1,12 @@
 name: Continuous Integration and Delivery
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+permissionss:
+  contents: read
+  packages: write
 
 env:
   IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]')/characters
@@ -8,9 +14,6 @@ env:
 jobs:
 
   build:
-    permissions:
-      contents: read
-      packages: write
     name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
@@ -70,6 +73,8 @@ jobs:
             -e DATABASE_TEST_URL=sqlite://test.db \
             -p 5003:8765 \
             ${{ env.IMAGE }}:latest
+      - name: Install requirements
+        run: docker exec -u 0 LOTR.api pip install black flake8 isort pytest
       - name: Pytest
         run: docker exec LOTR.api python -m pytest .
       - name: Flake8
