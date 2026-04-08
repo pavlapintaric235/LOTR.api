@@ -9,7 +9,7 @@ import requests
 
 
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8004/characters/")
+API_URL = os.getenv("API_URL", "https://lotr-api-gs1y.onrender.com/characters/")
 
 BASE_DIR = Path(__file__).resolve().parent
 
