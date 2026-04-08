@@ -24,7 +24,7 @@ async def create_character(payload: CharacterPayloadSchema) -> CharacterResponse
         "age": payload.age,
         "race": payload.race,
         "description": payload.description,
-        "image_url": payload.image_url,
+        "image": payload.image,
     }
     return response_object
 

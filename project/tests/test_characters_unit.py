@@ -12,7 +12,7 @@ def test_create_character(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
     }
     test_response_payload = {
         "id": 1,
@@ -20,7 +20,7 @@ def test_create_character(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
     }
 
     async def mock_post(payload):
@@ -65,7 +65,7 @@ def test_create_character_invalid_json(test_app):
             },
             {
                 "input": {},
-                "loc": ["body", "image_url"],
+                "loc": ["body", "image"],
                 "msg": "Field required",
                 "type": "missing",
             },
@@ -77,21 +77,6 @@ def test_create_character_invalid_json(test_app):
     assert response.json()["detail"][0]["msg"] == "Field required"
 
 
-def test_create_character_invalid_image_url(test_app):
-    response = test_app.post(
-        "/characters/",
-        data=json.dumps(
-            {
-                "name": "Frodo",
-                "age": 50,
-                "race": "Hobbit",
-                "description": "Ring bearer",
-                "image_url": "non-url",
-            }
-        ),
-    )
-    assert response.status_code == 422
-    assert "valid URL" in response.json()["detail"][0]["msg"]
 
 
 def test_read_character(test_app, monkeypatch):
@@ -101,7 +86,7 @@ def test_read_character(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
         "created_at": datetime.utcnow().isoformat(),
     }
 
@@ -134,7 +119,7 @@ def test_read_all_characters(test_app, monkeypatch):
             "age": 50,
             "race": "Hobbit",
             "description": "Ring bearer",
-            "image_url": "https://example.com/images/frodo.jpg",
+            "image": "images/frodo.jpg",
             "created_at": datetime.utcnow().isoformat(),
         },
         {
@@ -143,7 +128,7 @@ def test_read_all_characters(test_app, monkeypatch):
             "age": 2019,
             "race": "Maia",
             "description": "Wizard",
-            "image_url": "https://example.com/images/gandalf.jpg",
+            "image": "images/gandalf.jpg",
             "created_at": datetime.utcnow().isoformat(),
         },
     ]
@@ -166,7 +151,7 @@ def test_remove_characters(test_app, monkeypatch):
             "age": 50,
             "race": "Hobbit",
             "description": "Ring bearer",
-            "image_url": "https://example.com/images/frodo.jpg",
+            "image": "images/frodo.jpg",
             "created_at": datetime.utcnow().isoformat(),
         }
 
@@ -185,7 +170,7 @@ def test_remove_characters(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
     }
 
 
@@ -206,7 +191,7 @@ def test_update_characters(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
     }
     test_response_payload = {
         "id": 1,
@@ -214,7 +199,7 @@ def test_update_characters(test_app, monkeypatch):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
         "created_at": datetime.utcnow().isoformat(),
     }
 
@@ -233,7 +218,7 @@ VALID_CHARACTER = {
     "age": 50,
     "race": "Hobbit",
     "description": "Ring bearer",
-    "image_url": "https://example.com/images/frodo.jpg",
+    "image": "images/frodo.jpg",
 }
 
 
@@ -291,7 +276,7 @@ VALID_CHARACTER = {
                 },
                 {
                     "input": {},
-                    "loc": ["body", "image_url"],
+                    "loc": ["body", "image"],
                     "msg": "Field required",
                     "type": "missing",
                 },
@@ -303,7 +288,7 @@ VALID_CHARACTER = {
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -312,7 +297,7 @@ VALID_CHARACTER = {
                         "age": 50,
                         "race": "Hobbit",
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "name"],
                     "msg": "Field required",
@@ -326,7 +311,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -335,7 +320,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "race": "Hobbit",
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "age"],
                     "msg": "Field required",
@@ -349,7 +334,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "age": 50,
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -358,7 +343,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "age": 50,
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "race"],
                     "msg": "Field required",
@@ -372,7 +357,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "age": 50,
                 "race": "Hobbit",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -381,7 +366,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "age": 50,
                         "race": "Hobbit",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "description"],
                     "msg": "Field required",
@@ -406,7 +391,7 @@ VALID_CHARACTER = {
                         "race": "Hobbit",
                         "description": "Ring bearer",
                     },
-                    "loc": ["body", "image_url"],
+                    "loc": ["body", "image"],
                     "msg": "Field required",
                     "type": "missing",
                 }
@@ -421,7 +406,7 @@ VALID_CHARACTER = {
         "missing-age",
         "missing-race",
         "missing-description",
-        "missing-image_url",
+        "missing-image",
     ],
 )
 def test_update_characters_invalid(
@@ -437,18 +422,3 @@ def test_update_characters_invalid(
     assert response.json() == {"detail": detail}
 
 
-def test_update_characters_invalid_image_url(test_app):
-    response = test_app.put(
-        "/characters/1",
-        data=json.dumps(
-            {
-                "name": "Frodo",
-                "age": 50,
-                "race": "Hobbit",
-                "description": "Ring bearer",
-                "image_url": "non-url",
-            }
-        ),
-    )
-    assert response.status_code == 422
-    assert "valid URL" in response.json()["detail"][0]["msg"]

@@ -12,7 +12,7 @@ def test_create_character(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -22,7 +22,7 @@ def test_create_character(test_app_with_db):
     assert response.json()["age"] == 50
     assert response.json()["race"] == "Hobbit"
     assert response.json()["description"] == "Ring bearer"
-    assert response.json()["image_url"] == "https://example.com/images/frodo.jpg"
+    assert response.json()["image"] == "images/frodo.jpg"
 
 
 def test_create_character_invalid_json(test_app):
@@ -56,7 +56,7 @@ def test_create_character_invalid_json(test_app):
             },
             {
                 "input": {},
-                "loc": ["body", "image_url"],
+                "loc": ["body", "image"],
                 "msg": "Field required",
                 "type": "missing",
             },
@@ -73,7 +73,7 @@ def test_create_character_invalid_age_type(test_app):
                 "age": "fifty",
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
         ),
     )
@@ -90,7 +90,7 @@ def test_read_character(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -105,7 +105,7 @@ def test_read_character(test_app_with_db):
     assert response_dict["age"] == 50
     assert response_dict["race"] == "Hobbit"
     assert response_dict["description"] == "Ring bearer"
-    assert response_dict["image_url"] == "https://example.com/images/frodo.jpg"
+    assert response_dict["image"] == "images/frodo.jpg"
 
 
 def test_read_character_incorrect_id(test_app_with_db):
@@ -137,7 +137,7 @@ def test_read_all_characters(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -159,7 +159,7 @@ def test_remove_characters(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -173,7 +173,7 @@ def test_remove_characters(test_app_with_db):
         "age": 50,
         "race": "Hobbit",
         "description": "Ring bearer",
-        "image_url": "https://example.com/images/frodo.jpg",
+        "image": "images/frodo.jpg",
     }
 
 
@@ -206,7 +206,7 @@ def test_update_characters(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -220,7 +220,7 @@ def test_update_characters(test_app_with_db):
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             }
         ),
     )
@@ -232,7 +232,7 @@ def test_update_characters(test_app_with_db):
     assert response_dict["age"] == 50
     assert response_dict["race"] == "Hobbit"
     assert response_dict["description"] == "Ring bearer"
-    assert response_dict["image_url"] == "https://example.com/images/frodo.jpg"
+    assert response_dict["image"] == "images/frodo.jpg"
     assert response_dict["created_at"]
 
 
@@ -241,7 +241,7 @@ VALID_CHARACTER = {
     "age": 50,
     "race": "Hobbit",
     "description": "Ring bearer",
-    "image_url": "https://example.com/images/frodo.jpg",
+    "image": "images/frodo.jpg",
 }
 
 
@@ -299,7 +299,7 @@ VALID_CHARACTER = {
                 },
                 {
                     "input": {},
-                    "loc": ["body", "image_url"],
+                    "loc": ["body", "image"],
                     "msg": "Field required",
                     "type": "missing",
                 },
@@ -311,7 +311,7 @@ VALID_CHARACTER = {
                 "age": 50,
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -320,7 +320,7 @@ VALID_CHARACTER = {
                         "age": 50,
                         "race": "Hobbit",
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "name"],
                     "msg": "Field required",
@@ -334,7 +334,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "race": "Hobbit",
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -343,7 +343,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "race": "Hobbit",
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "age"],
                     "msg": "Field required",
@@ -357,7 +357,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "age": 50,
                 "description": "Ring bearer",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -366,7 +366,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "age": 50,
                         "description": "Ring bearer",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "race"],
                     "msg": "Field required",
@@ -380,7 +380,7 @@ VALID_CHARACTER = {
                 "name": "Frodo",
                 "age": 50,
                 "race": "Hobbit",
-                "image_url": "https://example.com/images/frodo.jpg",
+                "image": "images/frodo.jpg",
             },
             422,
             [
@@ -389,7 +389,7 @@ VALID_CHARACTER = {
                         "name": "Frodo",
                         "age": 50,
                         "race": "Hobbit",
-                        "image_url": "https://example.com/images/frodo.jpg",
+                        "image": "images/frodo.jpg",
                     },
                     "loc": ["body", "description"],
                     "msg": "Field required",
@@ -414,7 +414,7 @@ VALID_CHARACTER = {
                         "race": "Hobbit",
                         "description": "Ring bearer",
                     },
-                    "loc": ["body", "image_url"],
+                    "loc": ["body", "image"],
                     "msg": "Field required",
                     "type": "missing",
                 }
@@ -429,7 +429,7 @@ VALID_CHARACTER = {
         "missing-age",
         "missing-race",
         "missing-description",
-        "missing-image_url",
+        "missing-image",
     ],
 )
 def test_update_characters_invalid(
