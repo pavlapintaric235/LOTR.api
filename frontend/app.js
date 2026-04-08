@@ -1,6 +1,6 @@
 console.log("app.js loaded");
 
-const API_URL = "http://127.0.0.1:8004/characters/";
+const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
 const container = document.getElementById("characters");
 
 const modal = document.getElementById("character-modal");
@@ -24,7 +24,7 @@ async function loadCharacters() {
 
 
       card.innerHTML = `
-        <img src="${character.image_url}" alt="${character.name}" class="character-image" />
+        <img src="${character.image}" alt="${character.name}" class="character-image" />
         <div class="character-card-content">
           <h2 class="character-name">${character.name}</h2>
           <p class="character-meta"><strong>Age:</strong> ${character.age}</p>
@@ -43,7 +43,7 @@ async function loadCharacters() {
 }
 
 function openModal(character) {
-  modalImage.src = character.image_url;
+  modalImage.src = character.image;
   modalImage.alt = character.name;
   modalName.textContent = character.name;
   modalAge.textContent = character.age;
