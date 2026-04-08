@@ -77,8 +77,6 @@ def test_create_character_invalid_json(test_app):
     assert response.json()["detail"][0]["msg"] == "Field required"
 
 
-
-
 def test_read_character(test_app, monkeypatch):
     test_data = {
         "id": 1,
@@ -420,5 +418,3 @@ def test_update_characters_invalid(
     response = test_app.put(f"/characters/{character_id}", data=json.dumps(payload))
     assert response.status_code == status_code
     assert response.json() == {"detail": detail}
-
-
