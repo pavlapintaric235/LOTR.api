@@ -1,0 +1,95 @@
+[
+    {
+        "name": "Frodo Baggins",
+        "age": 50,
+        "race": "Hobbit",
+        "description": " 'Sam means well, but he is just always there...watching me...breathing near me...And Pippin!? I love him, but he has the survival instincts of a decorative candle' ",
+        "image_url": "images/frodo.jpg"
+
+    },
+    {
+        "name": "Samwise Gamgee",
+        "age": 38,
+        "race": "Hobbit",
+        "description": " 'Mr.Frodo says he wants to be left alone... he just needs to come to his senses... Also, Gollum is clearly evil.' ",
+        "image_url": "images/samwise.jpg"
+    },
+    {
+        "name": "Smeagol",
+        "age": 589,
+        "race": "Stoor Hobbit",
+        "description": " 'They don't trust us, no, they never trust Smeagol...<em>well maybe if you didn't hiss at them all the time</em>...They deserves hissing! Fat hobbit especially...' ",
+        "image_url": "images/smeagol.jpg"
+    },
+    {
+        "name": "Peregrin Took",
+        "age": 28,
+        "race": "Hobbit",
+        "description": " 'Merry gets this look on his face like <em>he's the only person who's ever had a thought</em>. Also, Frodo seems like his been on something lately...' ",
+        "image_url": "images/peregrin.jpg"
+    },
+    {
+        "name": "Meriadoc Brandybuck",
+        "age": 36,
+        "race": "Hobbit",
+        "description": " 'Pippin hears <em>anciant evil artifact</em> and reacts like he's found a birthday present. You cannot tell him 'do not touch that' because that becomes his entire personality for the day.' ",
+        "image_url": "images/meriadoc.jpg"
+    },
+    {
+        "name": "Gandalf the Grey",
+        "age": 2019,
+        "race": "Maia",
+        "description": " 'I leave the group for one afternoon and someone touches a palantir, someone else befriends a suspicious swamp creature, and the heir to the throne is having another identity crisis.' ",
+        "image_url": "images/gandalf.jpg"
+    },
+    {
+        "name": "Aragorn",
+        "age": 87,
+        "race": "Man",
+        "description": " 'Boromir always talked like he was one speech away from solving everything. Good heart, though. Terrible group dynamics.' ",
+        "image_url": "images/aragorn.jpg"
+    },
+    {
+        "name": "Legolas",
+        "age": 2931,
+        "race": "Elf",
+        "description": " 'Gimli thinks I'm judging him because he says exactly what he thinks all the time. But I think that's quite efficient.' ",
+        "image_url": "images/legolas.jpg"
+    },
+    {
+        "name": "Gimli",
+        "age": 139,
+        "race": "Dwarf",
+        "description": " 'Legolas and I are friends, yes...and no. Aragorn says things like <em>we press on</em> as if that solves the problem of my legs being the half length of everyone else's.' ",
+        "image_url": "images/gimli.jpg"
+    },
+    {
+        "name": "Boromir",
+        "age": 41,
+        "race": "Man",
+        "description": " 'Aragorn has this whole <em>reluctant king</em>, but a leader should have a plan. Not stare into the fire for ten minutes waiting for destiny to submit a proposal.' ",
+        "image_url": "images/boromir.jpg"
+    },
+    {
+        "name": "Arwen",
+        "age": 2700,
+        "race": "Elf",
+        "description": " 'I gave one man my heart and apparently that also included inhereting his doom, his destiny, his haunted ancestry, and his extremly complicated family meetings.' ",
+        "image_url": "images/arwen.jpg"
+    },
+    {
+        "name": "Sauron",
+        "age": 54000,
+        "race": "Maia",
+        "description": " 'You spend centuries building a brand, forging one masterpiece, establishing a strong visual identity, and suddenly everyone's calling you <em>dramatic</em> because there's an eye on top of the tower.' ",
+        "image_url": "images/sauron.jpg"
+    },
+    {
+        "name": "Elrond",
+        "age": 6000,
+        "race": "Half-elven",
+        "description": " 'I have lived through multiple ages of sorrow, ruin and bloodhed...So imagine my exhaustion when the future of Middle-earth somehow depends on: a ranger with commitment issues, four hobbits with no impulse control, a dwarf and an elf doing competitive bonding, and Gandalf arriving late with his opinions.' ",
+        "image_url": "images/elrond.jpg"
+    }
+
+]

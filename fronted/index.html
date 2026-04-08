@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOTR.api</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="page-header hero-header">
+   <img src="images/ring-banner.jpg" alt="LOTR banner" class="hero-bg" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+    <h1>LOTR.api</h1>
+    <p class="subtitle">The Fellowship of the Ring "venting" machine</p>
+   </div>
+  </header>
+
+  <main>
+    <div id="characters" class="characters-grid"></div>
+  </main>
+
+  <div id="character-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="close-modal" class="close-button">&times;</button>
+      <img id="modal-image" class="modal-image" src="" alt="" />
+      <h2 id="modal-name"></h2>
+      <p><strong>Age:</strong> <span id="modal-age"></span></p>
+      <p><strong>Race:</strong> <span id="modal-race"></span></p>
+      <p id="modal-description"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

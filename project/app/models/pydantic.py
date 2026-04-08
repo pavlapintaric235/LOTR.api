@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 
 class CharacterPayloadSchema(BaseModel):
@@ -6,6 +6,7 @@ class CharacterPayloadSchema(BaseModel):
     age: int
     race: str
     description: str
+    image_url: HttpUrl
 
 
 class CharacterResponseSchema(CharacterPayloadSchema):

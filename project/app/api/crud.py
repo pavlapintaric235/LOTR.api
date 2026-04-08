@@ -10,6 +10,7 @@ async def post(payload: CharacterPayloadSchema) -> int:
         age=payload.age,
         race=payload.race,
         description=payload.description,
+        image_url=payload.image_url,
     )
     await character.save()
     return character.id
@@ -22,6 +23,7 @@ async def get(id: int) -> Union[dict, None]:
         "age",
         "race",
         "description",
+        "image_url",
         "created_at",
     )
     return character[0] if character else None
@@ -34,6 +36,7 @@ async def get_all() -> List[dict]:
         "age",
         "race",
         "description",
+        "image_url",
         "created_at",
     )
     return characters
@@ -54,6 +57,7 @@ async def put(id: int, payload: CharacterUpdatePayloadSchema) -> Union[dict, Non
         age=payload.age,
         race=payload.race,
         description=payload.description,
+        image_url=payload.image_url,
     )
     if character:
         update_character = await Character.filter(id=id).values(
@@ -62,6 +66,7 @@ async def put(id: int, payload: CharacterUpdatePayloadSchema) -> Union[dict, Non
             "age",
             "race",
             "description",
+            "image_url",
             "created_at",
         )
         return update_character[0] if update_character else None

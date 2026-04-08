@@ -8,6 +8,7 @@ class Character(models.Model):
     age = fields.IntField()
     race = fields.CharField(max_length=255)
     description = fields.TextField()
+    image_url = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
