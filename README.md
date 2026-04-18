@@ -95,7 +95,9 @@ LOTR.api/
 ## Screenshots
 
 ### Home Page
-<img width="2360" height="1557" alt="IMG_2601" src="https://github.com/user-attachments/assets/ccff4321-8037-493d-9029-595b6f98865e" />
+<p align="center">
+  <img src="docs/screenshots/banner.png" alt="LOTR.api banner" width="100%">
+</p>
 
 
 ### Character Modal
