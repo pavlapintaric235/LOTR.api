@@ -96,8 +96,9 @@ LOTR.api/
 
 ### Home Page
 <p align="center">
-  <img src="docs/screenshots/banner.png" alt="LOTR.api banner" width="100%">
-</p>
+<img src="https://github.com/user-attachments/assets/cc891823-7d25-4645-a8b0-73b03e03b155">
+ <p/>
+
 
 
 ### Character Modal
