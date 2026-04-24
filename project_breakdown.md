@@ -3,13 +3,16 @@
 This project is a full-stack CRUD application built around characters from the Lord of the Rings universe.
 At its core, it provides a REST API that allows you to:
 -create characters
+
 -read one or all characters
+
 -update characters
+
 -delete characters
 All character data is stored in a PostgreSQL database, and the API is built using FastAPI.
 
 ## 2. Main user flow
-1. User opens the page:
+ 1. User opens the page:
 The frontend starts from index.html.
 It has a main container where characters will be placed:
 ```JavaScript
@@ -21,7 +24,7 @@ It also loads the JavaScript file:
 ```JavaScript
 <script src="app.js"></script>
 ```
-2. JavaScript sends request to the API
+ 2. JavaScript sends request to the API
 When the page loads, app.js calls loadCharacters():
 ```JavaScript
 loadCharacters();
@@ -31,7 +34,7 @@ Inside that function, the frontend sends a request to the API:
 const response = await fetch(API_URL);
 const characters = await response.json();
 ```
-3. FastAPI receives the request
+ 3. FastAPI receives the request
 The frontend is requesting:
 ```python
 GET /characters/
@@ -42,7 +45,7 @@ That request is handled in characters.py:
 async def read_all_characters() -> List[CharacterSchema]:
     return await crud.get_all()
 ```
-4. CRUD layer gets data from database
+ 4. CRUD layer gets data from database
 The route does not directly talk to the database.
 Instead, it calls crud.get_all():
 ```python
@@ -61,7 +64,7 @@ async def get_all() -> List[dict]:
 This means:
 Route → CRUD → Database model → Database
 
-5. Character model defines database data
+ 5. Character model defines database data
 The database table is represented by the Character model:
 ```python
 class Character(models.Model):
@@ -75,7 +78,7 @@ class Character(models.Model):
 ```
 So every character returned to the frontend comes from this table structure.
 
-6. API returns JSON to the frontend
+ 6. API returns JSON to the frontend
 The backend returns a list of characters.
 Then the frontend loops through them:
 ```JavaScript
@@ -83,7 +86,7 @@ characters.forEach((character) => {
   const card = document.createElement("article");
   card.className = "character-card";
 ```
-7. Frontend creates character cards
+ 7. Frontend creates character cards
 For every character, JavaScript creates HTML:
 ```JavaScript
 card.innerHTML = `
@@ -99,7 +102,7 @@ card.innerHTML = `
 ```
 This is what the user sees on the page.
 
-8. User clicks a character
+ 8. User clicks a character
 Each card gets a click event:
 ```JavaScript
 card.addEventListener("click", () => openModal(character));
@@ -362,7 +365,9 @@ When a request comes in:
 ```
 Pydantic:
 -checks all fields exist
+
 -checks types (age must be int, etc.)
+
 -rejects invalid input before it reaches the database
 
 If something is wrong:
@@ -391,7 +396,9 @@ class Character(models.Model):
 ```
 What Tortoise does?
 -maps Python objects → database rows
+
 -converts operations into SQL queries
+
 -interacts with PostgreSQL
 
 Example:
@@ -431,12 +438,19 @@ Database
 ## 6. Frontend flow
 The frontend flow is the path from the user opening the page to character cards being shown and opened in a modal.
 -index.html loads the page.
+
 -style.css makes it look like a LOTR-themed page.
+
 -app.js runs in the browser.
+
 -app.js calls the backend API.
+
 -The API returns character data as JSON.
+
 -JavaScript creates character cards.
+
 -User clicks a card.
+
 -A modal opens with the full character information.
 
 ### index.html 
@@ -476,6 +490,7 @@ const container = document.getElementById("characters");
 ```
 So the JavaScript knows:
 -Where to get data from -> API_URL
+
 -Where to put data -> #characters
 
 Page load triggers character loading, this function is called:
@@ -602,7 +617,7 @@ Live API URL
   ↓
 Frontend fetches live data
 ```
-1. Docker Compose defines the local deployment setup
+ 1. Docker Compose defines the local deployment setup
 docker-compose.yml -> runs backend + database together
 The app service runs FastAPI with Uvicorn:
 ```YAML
@@ -617,7 +632,7 @@ local machine port 8004 -> container port 8000
 So locally, the backend is accessed through:
 http://localhost:8004
 
-2. PostgreSQL runs as a separate service
+ 2. PostgreSQL runs as a separate service
 web-db -> PostgreSQL database container
 ```YAML
 web-db:
@@ -632,7 +647,7 @@ depends_on:
 ```
 So the backend expects PostgreSQL to be available before it works correctly.
 
-3. Environment variables connect backend to database
+ 3. Environment variables connect backend to database
 ```YAML
 environment:
   - ENVIRONMENT=dev
@@ -645,7 +660,7 @@ DATABASE_URL -> main development database
 DATABASE_TEST_URL -> separate test database
 This is better than hardcoding database credentials inside Python files.
 
-4. Databases are created at startup
+ 4. Databases are created at startup
 create.sql -> creates PostgreSQL databases
 ```YAML
 CREATE DATABASE web_dev;
@@ -655,7 +670,7 @@ So the project has:
 web_dev  -> normal app data
 web_test -> test data
 
-5. FastAPI app starts from main.py
+ 5. FastAPI app starts from main.py
 main.py -> deployment entry point
 ```python
 app = create_application()
@@ -671,7 +686,7 @@ app/main.py -> app variable
 
 That app variable is the FastAPI application.
 
-6. Database is registered during startup
+ 6. Database is registered during startup
 db.py -> connects app to PostgreSQL
 ```python
 def init_db(app: FastAPI) -> None:
@@ -689,7 +704,7 @@ Character.all()
 Character.filter()
 character.save()
 ```
-7. Frontend points to the deployed API
+ 7. Frontend points to the deployed API
 The frontend is not calling localhost. It calls the deployed Render URL:
 ```JavaScript
 const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
@@ -719,7 +734,7 @@ The project has two main types of tests:
 unit tests -> test routes with mocked CRUD/database logic
 integration tests -> test routes with a real test database
 
-1. conftest.py sets up the test app
+ 1. conftest.py sets up the test app
 conftest.py -> shared pytest setup
 This file creates fixtures that tests can reuse.
 ```python
@@ -732,7 +747,7 @@ def test_app():
 ```
 This fixture creates a FastAPI test client without connecting to the real database.
 
-2. Test settings override normal settings
+ 2. Test settings override normal settings
 During tests, the app does not use normal dev settings.
 It uses test settings:
 ```python
@@ -750,7 +765,7 @@ app.dependency_overrides[get_settings] = get_settings_override
 This means:
 normal config -> replaced with test config
 
-3. test_hello.py tests the health/config route
+ 3. test_hello.py tests the health/config route
 test_hello.py -> simple endpoint test
 ```python
 def test_hello(test_app):
@@ -764,7 +779,9 @@ def test_hello(test_app):
 ```
 This confirms:
 -/hello works
+
 -test config is loaded
+
 -testing=True
 
 ### Unit tests
@@ -878,7 +895,9 @@ assert response.status_code == 200
 ```
 This proves:
 -POST saves data
+
 -GET can retrieve saved data
+
 -database flow works
 
 ### Validation tests
