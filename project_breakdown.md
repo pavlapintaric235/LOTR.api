@@ -671,9 +671,11 @@ environment:
   - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
 ```
 Important part:
+
 DATABASE_URL -> main development database
 
 DATABASE_TEST_URL -> separate test database
+
 This is better than hardcoding database credentials inside Python files.
 
  4. Databases are created at startup
@@ -759,7 +761,9 @@ unit tests -> test routes with mocked CRUD/database logic
 integration tests -> test routes with a real test database
 
  1. conftest.py sets up the test app
+
 conftest.py -> shared pytest setup
+
 This file creates fixtures that tests can reuse.
 ```python
 @pytest.fixture(scope="module")
