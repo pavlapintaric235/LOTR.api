@@ -991,3 +991,124 @@ It checks cases like:
 
 -missing image -> 422
 
+## 9. Requirements and libraries
+```txt
+fastapi==0.115.12
+pydantic-settings==2.8.1
+uvicorn==0.34.1
+tortoise-orm==0.25.0
+asyncpg==0.30.0
+aerich[toml]==0.8.2
+httpx==0.28.1
+pytest==8.3.5
+pytest-cov==6.1.1
+pytest-xdist==3.6.1
+flake8==7.2.0
+black==25.1.0
+isort==6.0.1
+```
+### fastapi
+This is the main web framework. You can see it directly in files like:
+
+-main.py, where the app is created with FastAPI()
+```python
+application = FastAPI()
+```
+-characters.py, where routes are defined with @router.post, @router.get, @router.put, and @router.delete
+
+So FastAPI is what powers the API endpoints and request/response handling.
+
+### pydantic-settings
+This is used for environment-based app settings. In config.py, Settings class inherits from BaseSettings, which means values like environment, testing, and database_url can be loaded from environment variables.
+```python
+class Settings(BaseSettings):
+    environment: str = "dev"
+    testing: bool = bool(0)
+    database_url: str | None = None
+```
+So this is what allows the app to switch between dev and test configuration.
+
+### pydantic
+FastAPI depends on Pydantic, and this project uses it through schema files. In pydantic.py, models like CharacterPayloadSchema validate incoming request data.
+```python
+class CharacterPayloadSchema(BaseModel):
+    name: str
+    age: int
+    race: str
+    description: str
+    image: str
+```
+So Pydantic is responsible for data validation and serialization.
+
+### uvicorn
+This is the ASGI server used to run the FastAPI app. In docker-compose.yml, the web service starts the backend with:
+```YAML
+command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+```
+So Uvicorn is what actually serves the app when running the Docker setup locally.
+
+### tortoise-orm
+This is the ORM library for the database layer. It is used in db.py through register_tortoise, and it is also used in tortoise.py to define the Character model.
+```python
+class Character(models.Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(max_length=255)
+    age = fields.IntField()
+```
+So Tortoise is what maps Python model objects to database rows.
+
+### asyncpg
+This is the PostgreSQL async driver. It is needed because the app connects to PostgreSQL through Tortoise ORM using PostgreSQL-style database URLs like:
+```YAML
+DATABASE_URL=postgres://postgres:postgres@web-db:5432/web_dev
+```
+So asyncpg is the driver that makes PostgreSQL access work behind the scenes.
+
+### aerich[toml]
+This is the migration tool used with Tortoise ORM. It is configured in pyproject.toml:
+```python
+[tool.aerich]
+tortoise_orm = "app.db.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+```
+So Aerich is there to manage database migrations.
+
+### httpx
+This is used by the testing client stack. The tests use TestClient:
+```python
+from starlette.testclient import TestClient
+```
+So httpx supports request/response testing for the FastAPI app.
+
+### pytest
+This is the main testing framework. Test files use normal pytest-style test functions, fixtures, parametrization, and monkeypatch.
+```python
+@pytest.mark.parametrize(
+    "character_id, payload, status_code, detail",
+```
+So pytest is the base of the testing setup.
+
+### pytest-cov
+This is for test coverage reporting. It measures how much of the backend code is covered by tests.
+So pytest-cov is a development/testing tool, not part of the runtime API logic.
+
+### pytest-xdist
+This is for running tests in parallel.
+So pytest-xdist is also a testing/dev tool, useful when the test suite grows.
+
+### flake8
+This is the linting tool. It checks code style and possible mistakes.
+So flake8 is used for code quality, not for running the app.
+
+### black
+This is the code formatter. It formats Python files into a consistent style.
+So Black keeps the codebase readable and consistent.
+
+### isort
+This organizes import statements. This is another code-quality tool.
+
+
+
+
+
