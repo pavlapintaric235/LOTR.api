@@ -429,3 +429,495 @@ Tortoise model
 Database
 ```
 ## 6. Frontend flow
+The frontend flow is the path from the user opening the page to character cards being shown and opened in a modal.
+-index.html loads the page.
+-style.css makes it look like a LOTR-themed page.
+-app.js runs in the browser.
+-app.js calls the backend API.
+-The API returns character data as JSON.
+-JavaScript creates character cards.
+-User clicks a card.
+-A modal opens with the full character information.
+
+### index.html 
+index.html -> static HTML skeleton
+The page has an empty container where characters will be inserted:
+```JavaScript
+<main>
+  <div id="characters" class="characters-grid"></div>
+</main>
+```
+It also has a modal already prepared in the HTML:
+```JavaScript
+<div id="character-modal" class="modal hidden">
+  <div class="modal-content">
+    <button id="close-modal" class="close-button">&times;</button>
+    <img id="modal-image" class="modal-image" src="" alt="" />
+    <h2 id="modal-name"></h2>
+    <p><strong>Age:</strong> <span id="modal-age"></span></p>
+    <p><strong>Race:</strong> <span id="modal-race"></span></p>
+    <p id="modal-description"></p>
+  </div>
+</div>
+```
+At the bottom, it loads the JavaScript:
+```JavaScript
+<script src="app.js"></script>
+```
+### app.js 
+app.js -> frontend logic
+The frontend uses this API URL:
+```JavaScript
+const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
+```
+Then it gets the HTML container:
+```JavaScript
+const container = document.getElementById("characters");
+```
+So the JavaScript knows:
+-Where to get data from -> API_URL
+-Where to put data -> #characters
+
+Page load triggers character loading, this function is called:
+```JavaScript
+loadCharacters();
+```
+That means as soon as the script loads, the frontend starts fetching character data.
+
+Inside loadCharacters(), the browser sends a request to the API:
+```JavaScript
+const response = await fetch(API_URL);
+const characters = await response.json();
+```
+This means:
+-Browser -> GET https://lotr-api-gs1y.onrender.com/characters/
+The backend responds with a JSON list of characters.
+
+Before adding cards, the container is cleared:
+```JavaScript
+container.innerHTML = "";
+```
+This prevents duplicate cards if the function runs again.
+
+The frontend loops through all characters:
+```JavaScript
+characters.forEach((character) => {
+  const card = document.createElement("article");
+  card.className = "character-card";
+```
+For each character, it builds card HTML:
+```JavaScript
+card.innerHTML = `
+  <img src="${character.image}" alt="${character.name}" class="character-image" />
+  <div class="character-card-content">
+    <h2 class="character-name">${character.name}</h2>
+    <p class="character-meta"><strong>Age:</strong> ${character.age}</p>
+    <p class="character-meta"><strong>Race:</strong> ${character.race}</p>
+    <p class="description-preview">${character.description}</p>
+    <p class="click-more">Click to read more...</p>
+  </div>
+`;
+```
+Then it inserts the card into the page:
+```JavaScript
+container.appendChild(card);
+```
+Each card gets a click event:
+```JavaScript
+card.addEventListener("click", () => openModal(character));
+```
+So when the user clicks a card:
+Card click -> openModal(character)
+
+The modal is filled using the clicked character data:
+```JavaScript
+modalImage.src = character.image;
+modalImage.alt = character.name;
+modalName.textContent = character.name;
+modalAge.textContent = character.age;
+modalRace.textContent = character.race;
+modalDescription.innerHTML = character.description;
+```
+Then the modal becomes visible:
+```JavaScript
+modal.classList.remove("hidden");
+```
+The close button runs:
+```JavaScript
+closeModalButton.addEventListener("click", closeModal);
+```
+And closeModal() hides the modal again:
+```JavaScript
+function closeModal() {
+  modal.classList.add("hidden");
+}
+```
+The user can also close it by clicking outside the modal content:
+```JavaScript
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+```
+### style.css 
+style.css -> frontend styling
+The cards are arranged in a responsive grid:
+```CSS
+.characters-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+```
+On bigger screens, it changes layout:
+```CSS
+@media (min-width: 1100px) {
+  .characters-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+```
+The modal is hidden by default when it has the hidden class:
+```CSS
+.modal.hidden {
+  display: none;
+}
+```
+## 7. Deployment flow
+
+Deployment flow is the path from local project files to the running API online.
+```text
+Code
+  ↓
+Docker setup
+  ↓
+FastAPI app
+  ↓
+PostgreSQL database
+  ↓
+Render deployment
+  ↓
+Live API URL
+  ↓
+Frontend fetches live data
+```
+1. Docker Compose defines the local deployment setup
+docker-compose.yml -> runs backend + database together
+The app service runs FastAPI with Uvicorn:
+```YAML
+web:
+  build: ./project
+  command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+  ports:
+    - "8004:8000"
+```
+This means:
+local machine port 8004 -> container port 8000
+So locally, the backend is accessed through:
+http://localhost:8004
+
+2. PostgreSQL runs as a separate service
+web-db -> PostgreSQL database container
+```YAML
+web-db:
+  environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+```
+The backend depends on the database:
+```YAML
+depends_on:
+  - web-db
+```
+So the backend expects PostgreSQL to be available before it works correctly.
+
+3. Environment variables connect backend to database
+```YAML
+environment:
+  - ENVIRONMENT=dev
+  - TESTING=0
+  - DATABASE_URL=postgres://postgres:postgres@web-db:5432/web_dev
+  - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
+```
+Important part:
+DATABASE_URL -> main development database
+DATABASE_TEST_URL -> separate test database
+This is better than hardcoding database credentials inside Python files.
+
+4. Databases are created at startup
+create.sql -> creates PostgreSQL databases
+```YAML
+CREATE DATABASE web_dev;
+CREATE DATABASE web_test;
+```
+So the project has:
+web_dev  -> normal app data
+web_test -> test data
+
+5. FastAPI app starts from main.py
+main.py -> deployment entry point
+```python
+app = create_application()
+
+init_db(app)
+```
+When Uvicorn runs:
+```python
+uvicorn app.main:app
+```
+it looks for:
+app/main.py -> app variable
+
+That app variable is the FastAPI application.
+
+6. Database is registered during startup
+db.py -> connects app to PostgreSQL
+```python
+def init_db(app: FastAPI) -> None:
+    register_tortoise(
+        app,
+        db_url=os.environ.get("DATABASE_URL"),
+        modules={"models": ["app.models.tortoise"]},
+        generate_schemas=True,
+        add_exception_handlers=True,
+    )
+```
+This makes the deployed app able to use:
+```python
+Character.all()
+Character.filter()
+character.save()
+```
+7. Frontend points to the deployed API
+The frontend is not calling localhost. It calls the deployed Render URL:
+```JavaScript
+const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
+```
+8. Seed script populates deployed API
+seed_characters.py -> uploads character data
+The seed script also uses the deployed API URL by default:
+```python
+API_URL = os.getenv("API_URL", "https://lotr-api-gs1y.onrender.com/characters/")
+```
+It checks existing characters first:
+```python
+existing_characters = get_existing_characters()
+```
+Then it either updates or creates data:
+```python
+if existing_character:
+    response = requests.put(update_url, json=character)
+else:
+    response = requests.post(API_URL, json=character)
+```
+So this script is useful after deployment because it fills the live API with character data.
+
+## 8. Testing
+Testing in this project checks if the API works correctly without needing to manually click around or send requests yourself.
+The project has two main types of tests:
+unit tests -> test routes with mocked CRUD/database logic
+integration tests -> test routes with a real test database
+
+1. conftest.py sets up the test app
+conftest.py -> shared pytest setup
+This file creates fixtures that tests can reuse.
+```python
+@pytest.fixture(scope="module")
+def test_app():
+    app = create_application()
+    app.dependency_overrides[get_settings] = get_settings_override
+    with TestClient(app) as test_client:
+        yield test_client
+```
+This fixture creates a FastAPI test client without connecting to the real database.
+
+2. Test settings override normal settings
+During tests, the app does not use normal dev settings.
+It uses test settings:
+```python
+def get_settings_override():
+    return Settings(
+        environment="test",
+        testing=1,
+        database_url=os.environ.get("DATABASE_TEST_URL"),
+    )
+```
+Important line:
+```python
+app.dependency_overrides[get_settings] = get_settings_override
+```
+This means:
+normal config -> replaced with test config
+
+3. test_hello.py tests the health/config route
+test_hello.py -> simple endpoint test
+```python
+def test_hello(test_app):
+    response = test_app.get("/hello")
+    assert response.status_code == 200
+    assert response.json() == {
+        "message": "hello!",
+        "environment": "test",
+        "testing": True,
+    }
+```
+This confirms:
+-/hello works
+-test config is loaded
+-testing=True
+
+### Unit tests
+test_characters_unit.py -> mocked tests
+Unit tests do not use the real database.
+Instead, they replace CRUD functions with fake versions using monkeypatch.
+Example: create character unit test:
+ ```python
+async def mock_post(payload):
+    return 1
+
+monkeypatch.setattr(crud, "post", mock_post)
+```
+This means:
+crud.post() -> replaced with mock_post()
+So when the route calls crud.post(payload), it does not actually save anything.
+It just returns:
+```python
+1
+```
+Then the test checks the API response:
+```python
+response = test_app.post("/characters/", data=json.dumps(test_request_payload))
+
+assert response.status_code == 201
+assert response.json() == test_response_payload
+```
+Why monkeypatch is used?
+Monkeypatch is used to fake database behavior.
+Instead of this:
+route -> crud.py -> real database
+the test does this:
+route -> fake crud function
+That makes the test faster and more isolated.
+The unit test is checking:
+Does the route behave correctly if CRUD returns expected data?
+It is not checking if PostgreSQL works.
+
+Unit tests also check errors
+Example: if crud.get() returns None, the API should return 404:
+```python
+async def mock_get(id):
+    return None
+
+monkeypatch.setattr(crud, "get", mock_get)
+
+response = test_app.get("/characters/9999")
+assert response.status_code == 404
+assert response.json() == {"detail": "Character not found"}
+```
+This tests the route error handling.
+
+### Integration tests
+test_characters.py -> real database tests
+Integration tests use a test database.
+The fixture is:
+```python
+@pytest.fixture(scope="module")
+def test_app_with_db():
+    app = create_application()
+    app.dependency_overrides[get_settings] = get_settings_override
+    register_tortoise(
+        app,
+        db_url=os.environ.get("DATABASE_TEST_URL"),
+        modules={"models": ["app.models.tortoise"]},
+        generate_schemas=True,
+        add_exception_handlers=True,
+    )
+```
+Example: create character integration test
+```python
+response = test_app_with_db.post(
+    "/characters/",
+    data=json.dumps(
+        {
+            "name": "Frodo",
+            "age": 50,
+            "race": "Hobbit",
+            "description": "Ring bearer",
+            "image": "images/frodo.jpg",
+        }
+    ),
+)
+
+assert response.status_code == 201
+assert response.json()["name"] == "Frodo"
+```
+This test actually goes through the real backend flow.
+
+Example: read character integration test
+First, the test creates a character:
+```python
+response = test_app_with_db.post(
+    "/characters/",
+    data=json.dumps(
+        {
+            "name": "Frodo",
+            "age": 50,
+            "race": "Hobbit",
+            "description": "Ring bearer",
+            "image": "images/frodo.jpg",
+        }
+    ),
+)
+character_id = response.json()["id"]
+```
+Then it reads that character:
+```python
+response = test_app_with_db.get(f"/characters/{character_id}")
+assert response.status_code == 200
+```
+This proves:
+-POST saves data
+-GET can retrieve saved data
+-database flow works
+
+### Validation tests
+The tests also check bad input.
+Example: empty JSON body:
+```python
+response = test_app.post("/characters/", data=json.dumps({}))
+assert response.status_code == 422
+```
+Why 422?
+Because Pydantic expects:
+```txt
+name
+age
+race
+description
+image
+```
+If fields are missing, FastAPI rejects the request before CRUD/database logic runs.
+
+### Parametrized tests
+The project uses pytest.mark.parametrize to test many invalid update cases without writing separate test functions.
+```python
+@pytest.mark.parametrize(
+    "character_id, payload, status_code, detail",
+    [
+        (9999, VALID_CHARACTER, 404, "Character not found"),
+        (0, VALID_CHARACTER, 422, [...]),
+        (1, {}, 422, [...]),
+    ],
+)
+```
+This is cleaner than writing eight almost identical tests.
+It checks cases like:
+-nonexistent id -> 404
+-id = 0 -> 422
+-missing name -> 422
+-missing age -> 422
+-missing race -> 422
+-missing description -> 422
+-missing image -> 422
+
