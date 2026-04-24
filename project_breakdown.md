@@ -295,6 +295,7 @@ class Character(models.Model):
 In simple terms:
 
 Character model -> characters table
+
 fields          -> table columns
 
 When crud.py calls:
@@ -365,6 +366,7 @@ When a request comes in:
 }
 ```
 Pydantic:
+
 -checks all fields exist
 
 -checks types (age must be int, etc.)
@@ -396,6 +398,7 @@ class Character(models.Model):
     image = fields.CharField(max_length=255, null=True)
 ```
 What Tortoise does?
+
 -maps Python objects → database rows
 
 -converts operations into SQL queries
@@ -438,6 +441,7 @@ Database
 ```
 ## 6. Frontend flow
 The frontend flow is the path from the user opening the page to character cards being shown and opened in a modal.
+
 -index.html loads the page.
 
 -style.css makes it look like a LOTR-themed page.
@@ -492,6 +496,7 @@ Then it gets the HTML container:
 const container = document.getElementById("characters");
 ```
 So the JavaScript knows:
+
 -Where to get data from -> API_URL
 
 -Where to put data -> #characters
@@ -508,7 +513,9 @@ const response = await fetch(API_URL);
 const characters = await response.json();
 ```
 This means:
+
 -Browser -> GET https://lotr-api-gs1y.onrender.com/characters/
+
 The backend responds with a JSON list of characters.
 
 Before adding cards, the container is cleared:
@@ -622,7 +629,9 @@ Live API URL
 Frontend fetches live data
 ```
  1. Docker Compose defines the local deployment setup
+
 docker-compose.yml -> runs backend + database together
+
 The app service runs FastAPI with Uvicorn:
 ```YAML
 web:
@@ -638,6 +647,7 @@ So locally, the backend is accessed through:
 http://localhost:8004
 
  2. PostgreSQL runs as a separate service
+
 web-db -> PostgreSQL database container
 ```YAML
 web-db:
@@ -667,6 +677,7 @@ DATABASE_TEST_URL -> separate test database
 This is better than hardcoding database credentials inside Python files.
 
  4. Databases are created at startup
+
 create.sql -> creates PostgreSQL databases
 ```YAML
 CREATE DATABASE web_dev;
@@ -677,6 +688,7 @@ web_dev  -> normal app data
 web_test -> test data
 
  5. FastAPI app starts from main.py
+
 main.py -> deployment entry point
 ```python
 app = create_application()
@@ -693,6 +705,7 @@ app/main.py -> app variable
 That app variable is the FastAPI application.
 
  6. Database is registered during startup
+
 db.py -> connects app to PostgreSQL
 ```python
 def init_db(app: FastAPI) -> None:
@@ -711,11 +724,13 @@ Character.filter()
 character.save()
 ```
  7. Frontend points to the deployed API
+
 The frontend is not calling localhost. It calls the deployed Render URL:
 ```JavaScript
 const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
 ```
 8. Seed script populates deployed API
+
 seed_characters.py -> uploads character data
 
 The seed script also uses the deployed API URL by default:
@@ -738,6 +753,7 @@ So this script is useful after deployment because it fills the live API with cha
 ## 8. Testing
 Testing in this project checks if the API works correctly without needing to manually click around or send requests yourself.
 The project has two main types of tests:
+
 unit tests -> test routes with mocked CRUD/database logic
 
 integration tests -> test routes with a real test database
@@ -756,6 +772,7 @@ def test_app():
 This fixture creates a FastAPI test client without connecting to the real database.
 
  2. Test settings override normal settings
+
 During tests, the app does not use normal dev settings.
 It uses test settings:
 ```python
@@ -774,6 +791,7 @@ This means:
 normal config -> replaced with test config
 
  3. test_hello.py tests the health/config route
+
 test_hello.py -> simple endpoint test
 ```python
 def test_hello(test_app):
@@ -820,11 +838,15 @@ assert response.status_code == 201
 assert response.json() == test_response_payload
 ```
 Why monkeypatch is used?
+
 Monkeypatch is used to fake database behavior.
+
 Instead of this:
+
 route -> crud.py -> real database
 
 the test does this:
+
 route -> fake crud function
 
 That makes the test faster and more isolated.
@@ -850,7 +872,9 @@ This tests the route error handling.
 
 ### Integration tests
 test_characters.py -> real database tests
+
 Integration tests use a test database.
+
 The fixture is:
 ```python
 @pytest.fixture(scope="module")
@@ -908,6 +932,7 @@ response = test_app_with_db.get(f"/characters/{character_id}")
 assert response.status_code == 200
 ```
 This proves:
+
 -POST saves data
 
 -GET can retrieve saved data
@@ -948,10 +973,16 @@ This is cleaner than writing eight almost identical tests.
 It checks cases like:
 
 -nonexistent id -> 404
+
 -id = 0 -> 422
+
 -missing name -> 422
+
 -missing age -> 422
+
 -missing race -> 422
+
 -missing description -> 422
+
 -missing image -> 422
 
