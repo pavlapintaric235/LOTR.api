@@ -276,6 +276,7 @@ async def get_all() -> List[dict]:
 This is the main separation:
 
 characters.py -> decides what endpoint does
+
 crud.py       -> performs the database work
 
 ### tortoise.py
@@ -455,6 +456,7 @@ The frontend flow is the path from the user opening the page to character cards 
 
 ### index.html 
 index.html -> static HTML skeleton
+
 The page has an empty container where characters will be inserted:
 ```JavaScript
 <main>
@@ -480,6 +482,7 @@ At the bottom, it loads the JavaScript:
 ```
 ### app.js 
 app.js -> frontend logic
+
 The frontend uses this API URL:
 ```JavaScript
 const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
@@ -577,6 +580,7 @@ modal.addEventListener("click", (event) => {
 ```
 ### style.css 
 style.css -> frontend styling
+
 The cards are arranged in a responsive grid:
 ```CSS
 .characters-grid {
@@ -629,6 +633,7 @@ web:
 ```
 This means:
 local machine port 8004 -> container port 8000
+
 So locally, the backend is accessed through:
 http://localhost:8004
 
@@ -657,6 +662,7 @@ environment:
 ```
 Important part:
 DATABASE_URL -> main development database
+
 DATABASE_TEST_URL -> separate test database
 This is better than hardcoding database credentials inside Python files.
 
@@ -711,6 +717,7 @@ const API_URL = "https://lotr-api-gs1y.onrender.com/characters/";
 ```
 8. Seed script populates deployed API
 seed_characters.py -> uploads character data
+
 The seed script also uses the deployed API URL by default:
 ```python
 API_URL = os.getenv("API_URL", "https://lotr-api-gs1y.onrender.com/characters/")
@@ -732,6 +739,7 @@ So this script is useful after deployment because it fills the live API with cha
 Testing in this project checks if the API works correctly without needing to manually click around or send requests yourself.
 The project has two main types of tests:
 unit tests -> test routes with mocked CRUD/database logic
+
 integration tests -> test routes with a real test database
 
  1. conftest.py sets up the test app
@@ -786,7 +794,9 @@ This confirms:
 
 ### Unit tests
 test_characters_unit.py -> mocked tests
+
 Unit tests do not use the real database.
+
 Instead, they replace CRUD functions with fake versions using monkeypatch.
 Example: create character unit test:
  ```python
@@ -813,11 +823,15 @@ Why monkeypatch is used?
 Monkeypatch is used to fake database behavior.
 Instead of this:
 route -> crud.py -> real database
+
 the test does this:
 route -> fake crud function
+
 That makes the test faster and more isolated.
+
 The unit test is checking:
 Does the route behave correctly if CRUD returns expected data?
+
 It is not checking if PostgreSQL works.
 
 Unit tests also check errors
@@ -932,6 +946,7 @@ The project uses pytest.mark.parametrize to test many invalid update cases witho
 ```
 This is cleaner than writing eight almost identical tests.
 It checks cases like:
+
 -nonexistent id -> 404
 -id = 0 -> 422
 -missing name -> 422
